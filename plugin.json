@@ -1,0 +1,13 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "nexus-skills",
+  "description": "PingCode Nexus skills for building, debugging, reviewing, and security-auditing Nexus apps.",
+  "version": "0.1.0",
+  "author": {
+    "name": "PingCode"
+  },
+  "homepage": "https://github.com/pingcode-org/nexus-skills",
+  "repository": "https://github.com/pingcode-org/nexus-skills.git",
+  "license": "MIT",
+  "keywords": ["nexus", "pingcode", "skills"]
+}
