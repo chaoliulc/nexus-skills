@@ -1,0 +1,22 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "pingcode-nexus-skills",
+  "description": "Marketplace for the PingCode Nexus Skills plugin — scaffold, review, debug, and security-audit Nexus apps.",
+  "owner": {
+    "name": "PingCode"
+  },
+  "plugins": [
+    {
+      "name": "nexus-skills",
+      "description": "Nexus-focused skills: create/deploy/distribute apps, pre-release review, systematic debugging, and white-box security audit.",
+      "version": "0.1.0",
+      "author": {
+        "name": "PingCode"
+      },
+      "source": "./",
+      "category": "developer-tools",
+      "homepage": "https://github.com/pingcode-org/nexus-skills",
+      "license": "MIT"
+    }
+  ]
+}

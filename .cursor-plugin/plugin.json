@@ -1,0 +1,15 @@
+{
+  "name": "nexus-skills",
+  "displayName": "Nexus Skills",
+  "description": "PingCode Nexus skills for building, debugging, reviewing, and security-auditing Nexus apps.",
+  "version": "0.1.0",
+  "author": {
+    "name": "PingCode",
+    "url": "https://developer.pingcode.com"
+  },
+  "homepage": "https://github.com/pingcode-org/nexus-skills",
+  "repository": "https://github.com/pingcode-org/nexus-skills.git",
+  "license": "MIT",
+  "keywords": ["nexus", "pingcode", "skills"],
+  "skills": "./skills/"
+}

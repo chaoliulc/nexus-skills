@@ -1,0 +1,109 @@
+---
+name: nexus-app-builder
+description: >-
+  引导构建、部署、分发 PingCode Nexus 应用——使用 Nexus CLI（nexus create / deploy / distribute）
+  以及 Custom UI、Native UI 或事件/Webhook 模板。适用于新建或修改扩展、开发咨询、构建验证，以及用户明确要求的部署分发。
+  不要用于通用 PingCode 配置或脱离 Nexus 应用上下文的 REST 调用；已有故障排查优先 nexus-app-debugger，
+  发布就绪检查用 nexus-app-reviewer，深度安全审计用 nexus-security-reviewer。
+license: MIT
+metadata:
+  maintainer: pingcode
+  namespace: nexus
+  labels: nexus,builder,cli,custom-ui,native-ui
+---
+
+# Nexus App Builder
+
+## 何时使用
+
+- 新建或修改 Nexus 应用（项目页、工作项面板、仪表盘、Wiki 块、事件、Webhook 等）
+- Nexus 专属概念咨询（Resolver、Bridge、manifest、scope、外部域名）
+- 构建验证；用户要求时执行 `nexus deploy` / `nexus distribute`
+
+## 硬约束
+
+1. 先判断意图：**咨询 / 新建 / 改已有 / 部署分发**——按需分支，**不强制**跑完创建→分发全链路。
+2. 遵守 `references/boundaries.md`、`references/platform-invariants.md`。
+3. **新建**应用时始终用 `nexus create`（或本包 `scripts.create_nexus_app`）脚手架——禁止手搓无 `app.id` 的工程；纯咨询与改已有应用不要跑 create。
+4. 绝不在对话中索要/接收 API 令牌；引导用户本机 `nexus login`。
+5. 前端构建口径：裸 `nexus deploy` **不会**自动 `build-web`；本包 `deploy_nexus_app` 会尝试构建（无前端脚本则跳过）。裸 CLI 部署前有前端时 **ALWAYS** 先 `npm run build-web`。无 `nexus install`（分发后管理员安装）。
+6. **知识原则**：核心靠随包内置的 `references/`；完整平台参考（target/scope/API 明细）按需上官方在线文档 / `search_nexus_docs`，**不编造**。遵守 `references/docs-online.md`。
+7. 包前缀 `@pc-nexus/*`，CLI 为 `nexus`；文件名 `manifest.yaml`。
+8. UI Invoke ~5s；长任务用异步队列。`display` 不是鉴权。
+
+## 意图分支
+
+先选一条主路径，再加载对应参考（**不强制**全链路）：
+
+| 意图 | 路由 |
+| --- | --- |
+| 仅方案 / 概念咨询 | 读 [references/plan-only.md](references/plan-only.md)；停止于解释与示例 |
+| 新建可部署应用 | 读 [references/create-new-app.md](references/create-new-app.md) |
+| 改已有应用行为 | 读 [references/extend-existing-app.md](references/extend-existing-app.md) |
+| 仅部署 / 分发 | 读 [references/deploy-only.md](references/deploy-only.md)；不大改功能 |
+| 已知故障 / 白屏 / 报错 | 交接 `nexus-app-debugger` |
+| 发布前就绪审查 | 交接 `nexus-app-reviewer` |
+| 深度安全审计 | 交接 `nexus-security-reviewer` |
+
+开发中的普通编译/构建错误由本 skill 继续修；复杂运行时故障交 `nexus-app-debugger`。
+
+## 工作流细节
+
+### 前置（仅当要跑 nexus / 脚手架 / 部署）
+
+- Node ≥ 24；`npm install -g @pc-nexus/cli`；`nexus whoami --json` 验证登录。
+- 多选项（模板、站点域名）让用户选；站点只传域名（如 `acme.pingcode.com`）。
+
+### 新建（A）
+
+模板（与 `scripts.create_nexus_app` / 官方 `nexus create` 一致）：
+
+| 模板                                                           | 说明                                    |
+| -------------------------------------------------------------- | --------------------------------------- |
+| `react-custom-ui`                                              | **默认优先**；iframe Custom UI（React） |
+| `angular-custom-ui` / `vue-custom-ui` / `javascript-custom-ui` | 其他 Custom UI                          |
+| `react-native-ui` / `angular-native-ui`                        | Native UI（`Nx*` 宿主原生渲染）         |
+| `event-typescript` / `webhook-typescript`                      | 事件 / Webhook，无前端                  |
+
+选型：要完全自定义布局/第三方组件库 → Custom UI；要与产品视觉一致、用平台 `Nx*` 组件 → Native UI。二者渲染路径不同，NEVER 在 Custom UI 里当 Native 用 `@pc-nexus/react` 的 `Nx*`。
+
+```bash
+# 在本 skill 目录下
+python3 -m scripts.create_nexus_app \
+  --template react-custom-ui \
+  --name <app-name> \
+  --directory <parent-directory>
+```
+
+选 `target`：`references/list-nexus-extensions.md` + 官方扩展点文档；**逐字复制**。
+
+### 定制
+
+- Custom UI 最小路径：`references/ui-resolver-min-path.md`
+- Native UI 最小路径：`references/native-ui-min-path.md`
+- 事件 / Webhook 最小路径：`references/event-webhook-min-path.md`
+- 深读：`nexus-custom-ui-developer-guide.md`（含 Native 对照）、`nexus-backend-developer-guide.md`、`nexus-app-manifest-guide.md`——**按章节跳读**，服从上方意图分支，勿被指南里的创建/部署示例带去全链路
+- `nexus-development-guide.md`：**仅路径 A 或按章节跳读**；服从上方意图分支，勿默认全链路
+
+### 部署 / 分发（仅用户要求或任务明确需要）
+
+见 [references/deploy-only.md](references/deploy-only.md)。优先本包脚本（agent 亲自跑，勿只甩命令）。
+
+### 在线检索
+
+```bash
+python3 -m scripts.search_nexus_docs "resolver permissions" --max-pages 3
+```
+
+默认生产站；见 `references/docs-online.md`。
+
+## NEVER
+
+- 把 display 当鉴权；对话中粘贴密钥
+- 编造未核实的 target / scope / API（用本包 references + 官方在线文档）
+- 抢走现网故障主路径（`nexus-app-debugger`）或默认做完整发布审查（`nexus-app-reviewer`）
+- 宣称「已上线」但管理员尚未安装
+
+## 交接
+
+故障证据齐全 → `nexus-app-debugger`；「能不能发布」→ `nexus-app-reviewer`；越权/租户/凭据 → `nexus-security-reviewer`。

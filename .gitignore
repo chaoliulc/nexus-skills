@@ -1,0 +1,14 @@
+# OS / editor
+.DS_Store
+
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# Node (skill dev deps)
+node_modules/
+
+# Local skills CLI install artifacts (never commit into this publish repo)
+skills-lock.json
+.agents/skills/

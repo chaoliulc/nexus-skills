@@ -1,0 +1,26 @@
+{
+  "name": "pingcode-nexus-skills",
+  "interface": {
+    "displayName": "Nexus Skills"
+  },
+  "plugins": [
+    {
+      "name": "nexus-skills",
+      "version": "0.1.0",
+      "description": "PingCode Nexus skills for building, debugging, reviewing, and security-auditing Nexus apps.",
+      "author": {
+        "name": "PingCode"
+      },
+      "homepage": "https://github.com/pingcode-org/nexus-skills",
+      "license": "MIT",
+      "source": {
+        "source": "local",
+        "path": "./"
+      },
+      "policy": {
+        "installation": "AVAILABLE"
+      },
+      "category": "Developer Tools"
+    }
+  ]
+}
